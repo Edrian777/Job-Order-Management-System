@@ -12,8 +12,8 @@ using TaskManagement.Data;
 namespace TaskManagement.Migrations
 {
     [DbContext(typeof(TaskManagementContext))]
-    [Migration("20241205194433_CreateRolesTable")]
-    partial class CreateRolesTable
+    [Migration("20241215230027_NEW")]
+    partial class NEW
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,38 @@ namespace TaskManagement.Migrations
                     b.ToTable("CodeTable");
                 });
 
+            modelBuilder.Entity("TaskManagement.Models.Feedback", b =>
+                {
+                    b.Property<int>("FeedBackId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedBackId"), 1L, 1);
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProjectID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubmittedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FeedBackId");
+
+                    b.HasIndex("ProjectID");
+
+                    b.ToTable("Feedback");
+                });
+
             modelBuilder.Entity("TaskManagement.Models.Project", b =>
                 {
                     b.Property<int>("ProjectID")
@@ -75,6 +107,9 @@ namespace TaskManagement.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -94,14 +129,26 @@ namespace TaskManagement.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Feedback")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProjectName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RejectedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubmittedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -145,7 +192,7 @@ namespace TaskManagement.Migrations
 
                     b.HasKey("RoleID");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("TaskManagement.Models.Task", b =>
@@ -158,6 +205,9 @@ namespace TaskManagement.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -179,6 +229,9 @@ namespace TaskManagement.Migrations
 
                     b.Property<int>("ProjectID")
                         .HasColumnType("int");
+
+                    b.Property<string>("Rating")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -296,9 +349,6 @@ namespace TaskManagement.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmployeeNo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
@@ -319,6 +369,17 @@ namespace TaskManagement.Migrations
                     b.HasIndex("RoleID");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("TaskManagement.Models.Feedback", b =>
+                {
+                    b.HasOne("TaskManagement.Models.Project", "Project")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("TaskManagement.Models.Task", b =>
@@ -375,6 +436,8 @@ namespace TaskManagement.Migrations
 
             modelBuilder.Entity("TaskManagement.Models.Project", b =>
                 {
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("Tasks");
                 });
 

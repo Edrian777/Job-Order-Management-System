@@ -1,0 +1,27 @@
+
+
+.main {
+    background-color: #FFFFFF;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+}
+
+.home-container {
+    margin-top: 100px;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #FFCC00;
+    margin-bottom: 20px;
+}
+
+.home-link {
+    color: #FFCC00;
+    text-decoration: none;
+}
+
+.home-link:hover {
+    color: #800000;
+}

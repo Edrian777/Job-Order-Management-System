@@ -4,44 +4,66 @@
     ViewData["Title"] = "Users";
 }
 
-<h2>Users</h2>
+<head>
+    <link rel="stylesheet" href="~/css/userpage.css" asp-append-version="true" />
+</head>
 
-<table class="table">
+<h2 class="text-center">Users</h2>
+
+<h3>Unvalidated Users</h3>
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Role.RoleName)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Username)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.Role.RoleName)</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Where(u => !u.Active))
         {
             <tr>
+                <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Role.RoleName)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Username)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Role.RoleName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.UserID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.UserID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.UserID">Delete</a>
+                    <form asp-action="Accept" method="post" style="display: inline-block;">
+                        <input type="hidden" name="id" value="@item.UserID" />
+                        <button type="submit" class="btn btn-accept">Accept</button>
+                    </form>
+                    <a asp-action="Delete" asp-route-id="@item.UserID" class="btn btn-delete">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<a asp-action="Create">Create New</a>
+<h3>Validated Users</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Username)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.Role.RoleName)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(u => u.Active))
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Role.RoleName)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.UserID" class="btn btn-details">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@item.UserID" class="btn btn-edit">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UserID" class="btn btn-delete">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-create">Create New</a>
